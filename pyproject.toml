@@ -1,0 +1,23 @@
+[project]
+name = "cli-calculator"
+version = "0.1.0"
+description = "A simple python package implementation of a cli calculator"
+authors = [
+    {name = "Artem Kargopolov",email = "kur4g1n@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pytest (>=8.3.5,<9.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+flake8 = "^7.1.2"
+pyright = "^1.1.398"
+pytest = "^8.3.5"
