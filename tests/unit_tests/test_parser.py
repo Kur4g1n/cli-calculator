@@ -7,6 +7,7 @@ from cli_calculator.models.expression import (
     ExpressionNode,
     UnaryOperatorNode,
 )
+from cli_calculator.parsing.errors import ExpressionFormatError, UnsupportedLexemeError, UnsupportedNodeTypeError
 from cli_calculator.parsing.parser import ExpressionParser
 
 
@@ -44,3 +45,18 @@ from cli_calculator.parsing.parser import ExpressionParser
 def test_parser_general(expression: str, tree: ExpressionNode):
     root = ExpressionParser.parse_string(expression)
     assert root == tree
+
+@pytest.mark.parametrize("expression,error,message",
+    [
+        ("3 ! 3", ExpressionFormatError, "Wrong expression format. Unable to proceed to parsing"),
+        ("2 + 2 ; -1", ExpressionFormatError, "Multiple or no expressions are unsupported"),
+        ("", ExpressionFormatError, "Multiple or no expressions are unsupported"),
+        ("2 & 2", UnsupportedLexemeError, "Binary operator BitAnd is not supported"),
+        ("+2", UnsupportedLexemeError, "Unary operator UAdd is not supported"),
+        ("await 3", UnsupportedNodeTypeError, "Unsupported node type: Await")
+    ]
+)
+def test_parser_errors(expression: str, error: type[Exception], message: str):
+    with pytest.raises(error) as e_info:
+        ExpressionParser.parse_string(expression)
+    assert str(e_info.value) == message

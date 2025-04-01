@@ -17,7 +17,7 @@ class ExpressionParser:
         ast.Div: operator.truediv,
     }
 
-    permitted_unary_operators = {ast.USub: operator.neg, ast.UAdd: operator.pos}
+    permitted_unary_operators = {ast.USub: operator.neg}
 
     @classmethod
     def parse_string(cls, expression: str) -> ExpressionNode:
