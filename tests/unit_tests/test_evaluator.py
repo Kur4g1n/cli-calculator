@@ -25,15 +25,14 @@ from cli_calculator.lexemes import binary_operator_registry
         (ast.Div, ast.Sub, 10, 2, 3, 2),          # (10 / 2) - 3 = 2
         (ast.Div, ast.Mult, 6, 2, 3, 9),          # (6 / 2) * 3 = 9
         (ast.Div, ast.Div, 12, 3, 2, 2),          # (12 / 3) / 2 = 2
-        # BitXOR as exponentiation (^)
-        (ast.BitXor, ast.Add, 2, 3, 1, 9),        # (2 ^ 3) + 1 = 9
-        (ast.BitXor, ast.Sub, 3, 2, 1, 8),        # (3 ^ 2) - 1 = 8
-        (ast.BitXor, ast.Mult, 2, 2, 3, 12),      # (2 ^ 2) * 3 = 12
-        (ast.BitXor, ast.Div, 4, 2, 2, 8),        # (4 ^ 2) / 2 = 8
-        (ast.Add, ast.BitXor, 2, 1, 1, 3),        # (2 + 1) ^ 3 = 8
-        (ast.Sub, ast.BitXor, 5, 2, 2, 9),        # (5 - 2) ^ 2 = 9
-        (ast.Mult, ast.BitXor, 2, 2, 2, 16),      # (2 * 2) ^ 2 = 16
-        (ast.Div, ast.BitXor, 4, 2, 2, 4),        # (4 / 2) ^ 2 = 4
+        (ast.Pow, ast.Add, 2, 3, 1, 9),        # (2 ^ 3) + 1 = 9
+        (ast.Pow, ast.Sub, 3, 2, 1, 8),        # (3 ^ 2) - 1 = 8
+        (ast.Pow, ast.Mult, 2, 2, 3, 12),      # (2 ^ 2) * 3 = 12
+        (ast.Pow, ast.Div, 4, 2, 2, 8),        # (4 ^ 2) / 2 = 8
+        (ast.Add, ast.Pow, 2, 1, 1, 3),        # (2 + 1) ^ 3 = 8
+        (ast.Sub, ast.Pow, 5, 2, 2, 9),        # (5 - 2) ^ 2 = 9
+        (ast.Mult, ast.Pow, 2, 2, 2, 16),      # (2 * 2) ^ 2 = 16
+        (ast.Div, ast.Pow, 4, 2, 2, 4),        # (4 / 2) ^ 2 = 4
     ]
 )
 def test_evaluator(op1, op2, val1, val2, val3, expected):
