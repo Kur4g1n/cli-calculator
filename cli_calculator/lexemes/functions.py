@@ -51,7 +51,7 @@ def ctg(*args: float):
 @lexeme(
     registry=function_registry,
     lexeme_type="sqrt",
-    allow_settings=OperatorSettings.LIMIT_FLOATS | OperatorSettings.USE_DEGREES,
+    allow_settings=OperatorSettings.LIMIT_FLOATS
 )
 def sqrt(*args: float):
     if len(args) != 1:
@@ -62,10 +62,10 @@ def sqrt(*args: float):
 @lexeme(
     registry=function_registry,
     lexeme_type="ln",
-    allow_settings=OperatorSettings.LIMIT_FLOATS | OperatorSettings.USE_DEGREES,
+    allow_settings=OperatorSettings.LIMIT_FLOATS
 )
 def ln(*args: float):
-    if len(args) > 2:
+    if len(args) not in (1, 2):
         raise ArgumentNumberError(len(args), 2)
     return math.log(*args)
 
@@ -73,7 +73,7 @@ def ln(*args: float):
 @lexeme(
     registry=function_registry,
     lexeme_type="exp",
-    allow_settings=OperatorSettings.LIMIT_FLOATS | OperatorSettings.USE_DEGREES,
+    allow_settings=OperatorSettings.LIMIT_FLOATS
 )
 def exp(*args: float):
     if len(args) != 1:
