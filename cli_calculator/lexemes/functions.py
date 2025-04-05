@@ -1,7 +1,8 @@
 import math
 
 from cli_calculator.lexemes.errors import ArgumentNumberError
-from cli_calculator.lexemes.registry import OperatorSettings, function_registry, lexeme
+from cli_calculator.lexemes.registry import (OperatorSettings,
+                                             function_registry, lexeme)
 
 
 @lexeme(
@@ -49,9 +50,7 @@ def ctg(*args: float):
 
 
 @lexeme(
-    registry=function_registry,
-    lexeme_type="sqrt",
-    allow_settings=OperatorSettings.LIMIT_FLOATS
+    registry=function_registry, lexeme_type="sqrt", allow_settings=OperatorSettings.LIMIT_FLOATS
 )
 def sqrt(*args: float):
     if len(args) != 1:
@@ -59,22 +58,14 @@ def sqrt(*args: float):
     return math.sqrt(*args)
 
 
-@lexeme(
-    registry=function_registry,
-    lexeme_type="ln",
-    allow_settings=OperatorSettings.LIMIT_FLOATS
-)
+@lexeme(registry=function_registry, lexeme_type="ln", allow_settings=OperatorSettings.LIMIT_FLOATS)
 def ln(*args: float):
     if len(args) not in (1, 2):
         raise ArgumentNumberError(len(args), 2)
     return math.log(*args)
 
 
-@lexeme(
-    registry=function_registry,
-    lexeme_type="exp",
-    allow_settings=OperatorSettings.LIMIT_FLOATS
-)
+@lexeme(registry=function_registry, lexeme_type="exp", allow_settings=OperatorSettings.LIMIT_FLOATS)
 def exp(*args: float):
     if len(args) != 1:
         raise ArgumentNumberError(len(args), 1)

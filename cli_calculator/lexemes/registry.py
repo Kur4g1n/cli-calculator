@@ -26,7 +26,7 @@ class CallableRegistry[_KT: Hashable, _VT: Callable](UserDict):
     pass
 
 
-constant_registry = CallableRegistry[type[ast.Constant] | type[ast.Name], ConstantT]()
+constant_registry = CallableRegistry[type[ast.Constant] | str, ConstantT]()
 unary_operator_registry = CallableRegistry[type[ast.operator], UnaryOpT]()
 binary_operator_registry = CallableRegistry[type[ast.operator], BinaryOpT]()
 function_registry = CallableRegistry[str, FuncT]()

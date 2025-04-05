@@ -1,30 +1,21 @@
 import ast
 
-from cli_calculator.lexemes import (
-    binary_operator_registry,
-    unary_operator_registry,
-    function_registry,
-)
-
-
-from cli_calculator.models.expression import (
-    BinaryOperatorNode,
-    ConstantNode,
-    ExpressionNode,
-    FunctionCallNode,
-    UnaryOperatorNode,
-)
-from cli_calculator.parsing.errors import (
-    ExpressionFormatError,
-    UnsupportedLexemeError,
-    UnsupportedNodeTypeError,
-)
+from cli_calculator.lexemes import (binary_operator_registry,
+                                    constant_registry, function_registry,
+                                    unary_operator_registry)
+from cli_calculator.models.expression import (BinaryOperatorNode, ConstantNode,
+                                              ExpressionNode, FunctionCallNode,
+                                              UnaryOperatorNode)
+from cli_calculator.parsing.errors import (ExpressionFormatError,
+                                           UnsupportedLexemeError,
+                                           UnsupportedNodeTypeError)
 
 
 class ExpressionParser:
     permitted_unary_operators = unary_operator_registry
     permitted_binary_operators = binary_operator_registry
     permitted_functions = function_registry
+    permitted_constants = constant_registry
 
     @classmethod
     def parse_string(cls, expression: str) -> ExpressionNode:
@@ -81,8 +72,16 @@ class ExpressionParser:
             args = [cls._parse_node(arg) for arg in node.args]
             return FunctionCallNode(func, args)
 
+        elif isinstance(node, ast.Name):
+            if node.id not in cls.permitted_constants:
+                raise UnsupportedLexemeError("Constant", node.id)
+
+            constant_validator = cls.permitted_constants[node.id]
+            return ConstantNode(validator=constant_validator)
+
         elif isinstance(node, ast.Constant):
-            return ConstantNode(value=node.value)
+            constant_validator = cls.permitted_constants[ast.Constant]
+            return ConstantNode(validator=constant_validator, value=node.value)
 
         else:
             raise UnsupportedNodeTypeError(node.__class__.__name__)
