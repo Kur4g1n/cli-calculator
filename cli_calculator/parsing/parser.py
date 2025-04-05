@@ -1,24 +1,13 @@
 import ast
 
-from cli_calculator.lexemes import (
-    binary_operator_registry,
-    unary_operator_registry,
-    function_registry,
-)
-
-
-from cli_calculator.models.expression import (
-    BinaryOperatorNode,
-    ConstantNode,
-    ExpressionNode,
-    FunctionCallNode,
-    UnaryOperatorNode,
-)
-from cli_calculator.parsing.errors import (
-    ExpressionFormatError,
-    UnsupportedLexemeError,
-    UnsupportedNodeTypeError,
-)
+from cli_calculator.lexemes import (binary_operator_registry,
+                                    function_registry, unary_operator_registry)
+from cli_calculator.models.expression import (BinaryOperatorNode, ConstantNode,
+                                              ExpressionNode, FunctionCallNode,
+                                              UnaryOperatorNode)
+from cli_calculator.parsing.errors import (ExpressionFormatError,
+                                           UnsupportedLexemeError,
+                                           UnsupportedNodeTypeError)
 
 
 class ExpressionParser:

@@ -2,8 +2,8 @@ import ast
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 
-from cli_calculator.lexemes import BinaryOpT, OperatorSettings, UnaryOpT, FuncT, constant_registry
-
+from cli_calculator.lexemes import (BinaryOpT, FuncT, OperatorSettings,
+                                    UnaryOpT, constant_registry)
 from cli_calculator.models.errors import ComplexConstantError
 
 
