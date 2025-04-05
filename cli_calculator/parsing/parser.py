@@ -1,13 +1,17 @@
 import ast
 
-from cli_calculator.lexemes import (binary_operator_registry,
-                                    unary_operator_registry)
-from cli_calculator.models.expression import (BinaryOperatorNode, ConstantNode,
-                                              ExpressionNode,
-                                              UnaryOperatorNode)
-from cli_calculator.parsing.errors import (ExpressionFormatError,
-                                           UnsupportedLexemeError,
-                                           UnsupportedNodeTypeError)
+from cli_calculator.lexemes import binary_operator_registry, unary_operator_registry
+from cli_calculator.models.expression import (
+    BinaryOperatorNode,
+    ConstantNode,
+    ExpressionNode,
+    UnaryOperatorNode,
+)
+from cli_calculator.parsing.errors import (
+    ExpressionFormatError,
+    UnsupportedLexemeError,
+    UnsupportedNodeTypeError,
+)
 
 
 class ExpressionParser:
@@ -17,7 +21,7 @@ class ExpressionParser:
     @classmethod
     def parse_string(cls, expression: str) -> ExpressionNode:
         try:
-            parsed_expression = ast.parse(expression)
+            parsed_expression = ast.parse(cls._format_string(expression))
             body = parsed_expression.body
         # Unexpected errors are supposed to be raised
         except SyntaxError:
@@ -59,3 +63,7 @@ class ExpressionParser:
 
         else:
             raise UnsupportedNodeTypeError(node.__class__.__name__)
+
+    @staticmethod
+    def _format_string(string: str) -> str:
+        return string.strip().replace("**", "!").replace("^", "**")
