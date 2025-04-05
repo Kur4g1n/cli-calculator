@@ -2,7 +2,7 @@ POETRY := poetry
 PYTHON := $(POETRY) run python3
 PACKAGE_NAME := cli_calculator
 SRC_DIR := cli_calculator
-TESTS_DIR := tests
+TESTS_DIR := tests/
 UNIT_TESTS_DIR := tests/unit_tests
 
 .DEFAULT_GOAL := help
