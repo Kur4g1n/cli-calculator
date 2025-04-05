@@ -1,3 +1,4 @@
+import math
 import pytest
 from cli_calculator.evaluator import Evaluator
 from cli_calculator.parsing.parser import ExpressionParser
@@ -30,9 +31,31 @@ from cli_calculator.lexemes.errors import ExpressionOverflowError, ArgumentNumbe
         ("sqrt(2.25) + ln(exp(1))", 2.5),
     ],
 )
-def test_integration_success(expression: str, expected: float):
+def test_integration_degrees(expression: str, expected: float):
     parser = ExpressionParser()
     evaluator = Evaluator(use_degrees=True)
+    tree = parser.parse_string(expression)
+    result = evaluator.evaluate_tree(tree)
+    assert result == pytest.approx(expected, 1e-11)
+
+
+@pytest.mark.parametrize(
+    "expression, expected",
+    [
+        ("sin(pi)", 0),
+        ("cos(pi/2)", 0),
+        ("tg(pi/4)", 1),
+        ("ln(e^2)", 2),
+        ("exp(pi)", math.exp(math.pi)),
+        ("ctg(pi/2)", 0),
+        ("sqrt(4.0)", 2),
+        ("sin(pi/2) * 2", 2),
+        ("sqrt(2.25) + ln(exp(1))", 2.5),
+    ],
+)
+def test_integration_rad(expression: str, expected: float):
+    parser = ExpressionParser()
+    evaluator = Evaluator()
     tree = parser.parse_string(expression)
     result = evaluator.evaluate_tree(tree)
     assert result == pytest.approx(expected, 1e-11)
@@ -60,6 +83,10 @@ def test_integration_success(expression: str, expected: float):
         # Неправильное число аргументов
         ("sin(1, 2)", ArgumentNumberError, "Function accepts 1 arguments. 2 were given."),
         ("cos()", ArgumentNumberError, "Function accepts 1 arguments. 0 were given."),
+        ("tg()", ArgumentNumberError, "Function accepts 1 arguments. 0 were given."),
+        ("ctg()", ArgumentNumberError, "Function accepts 1 arguments. 0 were given."),
+        ("ln()", ArgumentNumberError, "Function accepts 2 arguments. 0 were given."),
+        ("exp()", ArgumentNumberError, "Function accepts 1 arguments. 0 were given."),
         ("sqrt(1, 2, 3)", ArgumentNumberError, "Function accepts 1 arguments. 3 were given."),
     ],
 )

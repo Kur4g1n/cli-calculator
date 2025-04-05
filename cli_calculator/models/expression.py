@@ -1,9 +1,8 @@
-import ast
 from abc import ABCMeta, abstractmethod
+from collections.abc import Callable
 from dataclasses import dataclass
 
-from cli_calculator.lexemes import (BinaryOpT, FuncT, OperatorSettings,
-                                    UnaryOpT, constant_registry)
+from cli_calculator.lexemes import BinaryOpT, FuncT, OperatorSettings, UnaryOpT
 from cli_calculator.models.errors import ComplexConstantError
 
 
@@ -33,12 +32,12 @@ class UnaryOperatorNode(ExpressionNode):
 
 @dataclass
 class ConstantNode(ExpressionNode):
-    def __init__(self, value: int | float | complex) -> None:
+    def __init__(self, validator: Callable, value: int | float | complex = 0) -> None:
         if isinstance(value, complex):
             raise ComplexConstantError(value)
 
         self.value = float(value)
-        self._validator = constant_registry[ast.Constant]
+        self._validator = validator
 
     def evaluate(self, settings: OperatorSettings) -> float:
         return self._validator(settings, self.value)

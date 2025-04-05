@@ -3,6 +3,7 @@ import pytest
 
 from cli_calculator.evaluator import Evaluator
 from cli_calculator.lexemes.errors import ExpressionOverflowError
+from cli_calculator.lexemes import constant_registry
 from cli_calculator.models.expression import BinaryOperatorNode, ConstantNode
 from cli_calculator.lexemes import binary_operator_registry
 
@@ -36,25 +37,27 @@ from cli_calculator.lexemes import binary_operator_registry
     ]
 )
 def test_evaluator(op1, op2, val1, val2, val3, expected):
+    validator = constant_registry[ast.Constant]
     inner_node = BinaryOperatorNode(
         binary_operator_registry[op1],
-        ConstantNode(val1),
-        ConstantNode(val2)
+        ConstantNode(validator, val1),
+        ConstantNode(validator, val2)
     )
     outer_node = BinaryOperatorNode(
         binary_operator_registry[op2],
         inner_node,
-        ConstantNode(val3)
+        ConstantNode(validator, val3)
     )
     evaluator = Evaluator()
     result = evaluator.evaluate_tree(outer_node)
     assert result == pytest.approx(expected, 1e-11)
 
 def test_evaluator_error():
+    validator = constant_registry[ast.Constant]
     node = BinaryOperatorNode(
         binary_operator_registry[ast.Div],
-        ConstantNode(1e999),
-        ConstantNode(1)
+        ConstantNode(validator, 1e999),
+        ConstantNode(validator, 1)
     )
     evaluator = Evaluator()
     with pytest.raises(ExpressionOverflowError):
