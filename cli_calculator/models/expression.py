@@ -2,8 +2,8 @@ import ast
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 
-from cli_calculator.lexemes import (BinaryOpT, OperatorSettings, UnaryOpT,
-                                    constant_registry)
+from cli_calculator.lexemes import BinaryOpT, OperatorSettings, UnaryOpT, FuncT, constant_registry
+
 from cli_calculator.models.errors import ComplexConstantError
 
 
@@ -42,3 +42,12 @@ class ConstantNode(ExpressionNode):
 
     def evaluate(self, settings: OperatorSettings) -> float:
         return self._validator(settings, self.value)
+
+
+@dataclass
+class FunctionCallNode(ExpressionNode):
+    function: FuncT
+    arguments: list[ExpressionNode]
+
+    def evaluate(self, settings: OperatorSettings) -> float:
+        return self.function(settings, *[arg.evaluate(settings) for arg in self.arguments])

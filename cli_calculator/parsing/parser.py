@@ -1,18 +1,28 @@
 import ast
 
-from cli_calculator.lexemes import (binary_operator_registry,
-                                    unary_operator_registry)
-from cli_calculator.models.expression import (BinaryOperatorNode, ConstantNode,
-                                              ExpressionNode,
-                                              UnaryOperatorNode)
-from cli_calculator.parsing.errors import (ExpressionFormatError,
-                                           UnsupportedLexemeError,
-                                           UnsupportedNodeTypeError)
+from cli_calculator.lexemes import (
+    binary_operator_registry,
+    unary_operator_registry,
+    function_registry,
+)
+from cli_calculator.models.expression import (
+    BinaryOperatorNode,
+    ConstantNode,
+    ExpressionNode,
+    FunctionCallNode,
+    UnaryOperatorNode,
+)
+from cli_calculator.parsing.errors import (
+    ExpressionFormatError,
+    UnsupportedLexemeError,
+    UnsupportedNodeTypeError,
+)
 
 
 class ExpressionParser:
     permitted_unary_operators = unary_operator_registry
     permitted_binary_operators = binary_operator_registry
+    permitted_functions = function_registry
 
     @classmethod
     def parse_string(cls, expression: str) -> ExpressionNode:
@@ -53,6 +63,21 @@ class ExpressionParser:
                 operation=cls.permitted_unary_operators[ast_operator_type],
                 value=cls._parse_node(node.operand),
             )
+
+        elif isinstance(node, ast.Call):
+            function = node.func
+            if not isinstance(function, ast.Name):
+                raise UnsupportedNodeTypeError(function.__class__.__name__)
+
+            if function.id not in cls.permitted_functions:
+                raise UnsupportedLexemeError("Function", function.id)
+
+            if len(node.keywords) != 0:
+                raise UnsupportedLexemeError("Keywords", str(node.keywords))
+
+            func = cls.permitted_functions[function.id]
+            args = [cls._parse_node(arg) for arg in node.args]
+            return FunctionCallNode(func, args)
 
         elif isinstance(node, ast.Constant):
             return ConstantNode(value=node.value)

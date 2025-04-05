@@ -14,15 +14,22 @@ def main():
     )
     parser.add_argument(
         "-l",
-        "--use_inf",
+        "--allow_inf",
         action="store_true",
-        help="Limits the maximum value of numbers in the expression",
+        help="Allows the use of very large numbers in the expression",
+    )
+    parser.add_argument(
+        "-r",
+        "--use_deg",
+        action="store_true",
+        help="Use degrees instead of radians as the angle unit",
     )
     args = parser.parse_args()
 
     expression: str = args.expr
-    limit_floats: bool = not bool(args.use_inf)
-    evaluator = Evaluator(limit_floats=limit_floats)
+    limit_floats: bool = not bool(args.allow_inf)
+    use_degrees: bool = args.use_deg
+    evaluator = Evaluator(limit_floats=limit_floats, use_degrees=use_degrees)
     expr_tree = ExpressionParser.parse_string(expression)
     solution = evaluator.evaluate_tree(expr_tree)
 
