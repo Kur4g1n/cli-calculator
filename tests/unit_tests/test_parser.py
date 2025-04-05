@@ -1,5 +1,4 @@
 import ast
-import operator
 import pytest
 
 from cli_calculator.lexemes import unary_operator_registry, binary_operator_registry
