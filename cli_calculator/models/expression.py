@@ -1,32 +1,32 @@
 from abc import ABCMeta, abstractmethod
-from collections.abc import Callable
 from dataclasses import dataclass
 
+from cli_calculator.lexemes import BinaryOpT, OperatorSettings, UnaryOpT
 from cli_calculator.models.errors import ComplexConstantError
 
 
 class ExpressionNode(metaclass=ABCMeta):
     @abstractmethod
-    def evaluate(self) -> float: ...
+    def evaluate(self, settings: OperatorSettings) -> float: ...
 
 
 @dataclass
 class BinaryOperatorNode(ExpressionNode):
-    operation: Callable[[float, float], float]
+    operation: BinaryOpT
     left: ExpressionNode
     right: ExpressionNode
 
-    def evaluate(self) -> float:
-        return self.operation(self.left.evaluate(), self.right.evaluate())
+    def evaluate(self, settings: OperatorSettings) -> float:
+        return self.operation(settings, self.left.evaluate(settings), self.right.evaluate(settings))
 
 
 @dataclass
 class UnaryOperatorNode(ExpressionNode):
-    operation: Callable[[float], float]
+    operation: UnaryOpT
     value: ExpressionNode
 
-    def evaluate(self) -> float:
-        return self.operation(self.value.evaluate())
+    def evaluate(self, settings: OperatorSettings) -> float:
+        return self.operation(settings, self.value.evaluate(settings))
 
 
 @dataclass
@@ -37,5 +37,5 @@ class ConstantNode(ExpressionNode):
 
         self.value = float(value)
 
-    def evaluate(self) -> float:
+    def evaluate(self, settings: OperatorSettings) -> float:
         return self.value

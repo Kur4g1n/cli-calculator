@@ -1,6 +1,8 @@
+import ast
 import operator
 import pytest
 
+from cli_calculator.lexemes import unary_operator_registry, binary_operator_registry
 from cli_calculator.models.errors import ComplexConstantError
 from cli_calculator.models.expression import (
     BinaryOperatorNode,
@@ -19,33 +21,33 @@ from cli_calculator.parsing.parser import ExpressionParser
 @pytest.mark.parametrize(
     "expression,tree",
     [
-        ("2 + 2", BinaryOperatorNode(operator.add, ConstantNode(2), ConstantNode(2))),
+        ("2 + 2", BinaryOperatorNode(binary_operator_registry[ast.Add], ConstantNode(2), ConstantNode(2))),
         (
             "22.45 - 23.89",
-            BinaryOperatorNode(operator.sub, ConstantNode(22.45), ConstantNode(23.89)),
+            BinaryOperatorNode(binary_operator_registry[ast.Sub], ConstantNode(22.45), ConstantNode(23.89)),
         ),
         (
             "331.96 * 112.7",
-            BinaryOperatorNode(operator.mul, ConstantNode(331.96), ConstantNode(112.7)),
+            BinaryOperatorNode(binary_operator_registry[ast.Mult], ConstantNode(331.96), ConstantNode(112.7)),
         ),
         (
             "1379 / 9782",
-            BinaryOperatorNode(operator.truediv, ConstantNode(1379), ConstantNode(9782)),
+            BinaryOperatorNode(binary_operator_registry[ast.Div], ConstantNode(1379), ConstantNode(9782)),
         ),
         (
             "-786",
-            UnaryOperatorNode(operator.neg, ConstantNode(786)),
+            UnaryOperatorNode(unary_operator_registry[ast.USub], ConstantNode(786)),
         ),
         (
             "1234.15 / 1000.5 * -13 - 100",
             BinaryOperatorNode(
-                operator.sub,
+                binary_operator_registry[ast.Sub],
                 BinaryOperatorNode(
-                    operator.mul,
+                    binary_operator_registry[ast.Mult],
                     BinaryOperatorNode(
-                        operator.truediv, ConstantNode(1234.15), ConstantNode(1000.5)
+                        binary_operator_registry[ast.Div], ConstantNode(1234.15), ConstantNode(1000.5)
                     ),
-                    UnaryOperatorNode(operator.neg, ConstantNode(13)),
+                    UnaryOperatorNode(unary_operator_registry[ast.USub], ConstantNode(13)),
                 ),
                 ConstantNode(100),
             ),

@@ -1,12 +1,13 @@
 POETRY := poetry
 PYTHON := $(POETRY) run python3
+PACKAGE_NAME := cli_calculator
 SRC_DIR := cli_calculator
 TESTS_DIR := tests
 UNIT_TESTS_DIR := tests/unit_tests
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install install-dev unit-test test lint format clean check-env
+.PHONY: help install install-dev unit-test test lint format clean check-env run
 
 help:  ## Display this help message
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -38,3 +39,6 @@ clean:  ## Clean project artifacts
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -delete
 	rm -rf .coverage htmlcov/ .mypy_cache/ .pytest_cache/
+
+run: ## Run the calculator with expression EXPR (default: 1+1)
+	$(PYTHON) -m $(PACKAGE_NAME) $(or $(EXPR), "1+1")

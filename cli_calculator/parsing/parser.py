@@ -1,6 +1,7 @@
 import ast
-import operator
 
+from cli_calculator.lexemes import (binary_operator_registry,
+                                    unary_operator_registry)
 from cli_calculator.models.expression import (BinaryOperatorNode, ConstantNode,
                                               ExpressionNode,
                                               UnaryOperatorNode)
@@ -10,14 +11,8 @@ from cli_calculator.parsing.errors import (ExpressionFormatError,
 
 
 class ExpressionParser:
-    permitted_binary_operators = {
-        ast.Add: operator.add,
-        ast.Sub: operator.sub,
-        ast.Mult: operator.mul,
-        ast.Div: operator.truediv,
-    }
-
-    permitted_unary_operators = {ast.USub: operator.neg}
+    permitted_unary_operators = unary_operator_registry
+    permitted_binary_operators = binary_operator_registry
 
     @classmethod
     def parse_string(cls, expression: str) -> ExpressionNode:
@@ -42,7 +37,6 @@ class ExpressionParser:
 
             if ast_operator_type not in cls.permitted_binary_operators:
                 raise UnsupportedLexemeError("Binary operator", node.op.__class__.__name__)
-
             return BinaryOperatorNode(
                 operation=cls.permitted_binary_operators[ast_operator_type],
                 left=cls._parse_node(node.left),
