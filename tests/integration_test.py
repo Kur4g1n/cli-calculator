@@ -7,7 +7,7 @@ from cli_calculator.parsing.errors import (
     UnsupportedLexemeError,
     UnsupportedNodeTypeError,
 )
-from cli_calculator.models.errors import ComplexConstantError
+from cli_calculator.lexemes.errors import ComplexConstantError
 from cli_calculator.lexemes.errors import ExpressionOverflowError, ArgumentNumberError
 
 

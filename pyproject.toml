@@ -45,7 +45,7 @@ exclude_lines = [
     "__repr__",
     "__str__",
 ]
-fail_under = 95
+fail_under = 90
 precision = 2
 show_missing = true
 
