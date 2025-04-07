@@ -9,6 +9,7 @@ class Evaluator:
             self.settings |= OperatorSettings.LIMIT_FLOATS
         if use_degrees:
             self.settings |= OperatorSettings.USE_DEGREES
+            self.settings |= OperatorSettings.RETURN_DEGREES
 
     def evaluate_tree(self, root: ExpressionNode) -> float:
         return root.evaluate(self.settings)

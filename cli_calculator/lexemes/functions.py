@@ -40,6 +40,17 @@ def tg(*args: float):
 
 @lexeme(
     registry=function_registry,
+    lexeme_type="arctan",
+    allow_settings=OperatorSettings.LIMIT_FLOATS | OperatorSettings.RETURN_DEGREES,
+)
+def arctan(*args: float):
+    if len(args) != 1:
+        raise ArgumentNumberError(len(args), 1)
+    return math.atan(*args)
+
+
+@lexeme(
+    registry=function_registry,
     lexeme_type="ctg",
     allow_settings=OperatorSettings.LIMIT_FLOATS | OperatorSettings.USE_DEGREES,
 )

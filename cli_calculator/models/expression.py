@@ -3,7 +3,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from cli_calculator.lexemes import BinaryOpT, FuncT, OperatorSettings, UnaryOpT
-from cli_calculator.models.errors import ComplexConstantError
 
 
 class ExpressionNode(metaclass=ABCMeta):
@@ -32,15 +31,11 @@ class UnaryOperatorNode(ExpressionNode):
 
 @dataclass
 class ConstantNode(ExpressionNode):
-    def __init__(self, validator: Callable, value: int | float | complex = 0) -> None:
-        if isinstance(value, complex):
-            raise ComplexConstantError(value)
-
-        self.value = float(value)
-        self._validator = validator
+    validator: Callable
+    value: int | float | complex = 0
 
     def evaluate(self, settings: OperatorSettings) -> float:
-        return self._validator(settings, self.value)
+        return self.validator(settings, self.value)
 
 
 @dataclass

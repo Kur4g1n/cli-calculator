@@ -7,8 +7,7 @@ from cli_calculator.lexemes import (
     binary_operator_registry,
     constant_registry
 )
-from cli_calculator.lexemes.errors import ExpressionOverflowError
-from cli_calculator.models.errors import ComplexConstantError
+from cli_calculator.lexemes.errors import ComplexConstantError, ExpressionOverflowError
 from cli_calculator.models.expression import BinaryOperatorNode, ConstantNode, UnaryOperatorNode
 
 
@@ -24,7 +23,7 @@ def test_constant_node():
 def test_constant_node_error():
     validator = constant_registry[ast.Constant]
     with pytest.raises(ComplexConstantError) as e_info:
-        ConstantNode(validator, 12.3 + 3j)
+        ConstantNode(validator, 12.3 + 3j).evaluate(OperatorSettings.LIMIT_FLOATS)
     assert str(e_info.value) == "Value (12.3+3j) of type complex is not supported"
     num = 1e999
     with pytest.raises(ExpressionOverflowError) as e_info:

@@ -7,7 +7,6 @@ from cli_calculator.lexemes import (
     constant_registry,
     function_registry,
 )
-from cli_calculator.models.errors import ComplexConstantError
 from cli_calculator.models.expression import (
     BinaryOperatorNode,
     ConstantNode,
@@ -112,7 +111,7 @@ from cli_calculator.parsing.parser import ExpressionParser
             "-786",
             UnaryOperatorNode(
                 unary_operator_registry[ast.USub],
-                ConstantNode(constant_registry[ast.Constant], -786),
+                ConstantNode(constant_registry[ast.Constant], 786),
             ),
         ),
         (
@@ -150,7 +149,6 @@ def test_parser_general(expression: str, tree: ExpressionNode):
         ("2 & 2", UnsupportedLexemeError, "Binary operator BitAnd is not supported"),
         ("+2", UnsupportedLexemeError, "Unary operator UAdd is not supported"),
         ("await 3", UnsupportedNodeTypeError, "Unsupported node type: Await"),
-        ("1 + 4j", ComplexConstantError, "Value 4j of type complex is not supported"),
     ],
 )
 def test_parser_errors(expression: str, error: type[Exception], message: str):

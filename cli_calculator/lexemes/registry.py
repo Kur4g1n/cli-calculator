@@ -6,7 +6,8 @@ from collections.abc import Callable, Hashable
 from enum import IntFlag
 from functools import wraps
 
-from cli_calculator.lexemes.errors import ExpressionOverflowError
+from cli_calculator.lexemes.errors import (ComplexConstantError,
+                                           ExpressionOverflowError)
 
 UnaryOpT = Callable[["OperatorSettings", float], float]
 ConstantT = UnaryOpT
@@ -20,6 +21,7 @@ class OperatorSettings(IntFlag):
     NONE = 0
     LIMIT_FLOATS = 1 << 0
     USE_DEGREES = 1 << 1
+    RETURN_DEGREES = 1 << 2
 
 
 class CallableRegistry[_KT: Hashable, _VT: Callable](UserDict):
@@ -47,7 +49,13 @@ def lexeme(
             if OperatorSettings.LIMIT_FLOATS in settings and abs(res) > MAX_FLOAT:
                 raise ExpressionOverflowError(res)
 
-            return res
+            if OperatorSettings.RETURN_DEGREES in settings:
+                res = math.degrees(res)
+
+            if isinstance(res, complex):
+                raise ComplexConstantError(res)
+
+            return float(res)
 
         registry[lexeme_type] = wrapper
         return wrapper
