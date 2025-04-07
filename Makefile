@@ -10,7 +10,7 @@ USE_DEG ?= false
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install install-dev unit-test test lint format clean check-env run doc
+.PHONY: help install install-dev unit-test test lint format clean check-env run doc stress-tests
 
 help:  ## Display this help message
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -48,3 +48,6 @@ run:  ## Run the calculator with expression EXPR (default: 1+1) ALLOW_INF allows
 
 doc:  ## Display cli documentation
 	$(PYTHON) -m $(PACKAGE_NAME) --help
+
+stress-tests:  ## Run stress tests
+	$(POETRY) run pytest -vv -s $(TESTS_DIR) -m stress
